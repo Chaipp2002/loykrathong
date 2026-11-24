@@ -58,8 +58,30 @@ input:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:1px}
 .me img{width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none;background:#223}
 .go.line{background:#06c755;color:#fff}
 .go.line:hover{background:#05b34c}
-.card .av{width:48px;height:48px;border-radius:50%;object-fit:cover;float:right;margin-left:12px}
-.card .av[hidden]{display:none}
+.card .avs{float:right;display:flex;margin-left:12px}
+.card .avs img{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #ffe7b0;background:#223}
+.card .avs img+img{margin-left:-12px}
+.card .avs img[hidden]{display:none}
+.lbl2{font-size:14px;color:var(--muted);margin-top:6px}
+.pals{display:flex;flex-wrap:wrap;gap:8px}
+.pal{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:5px 14px;border:1px solid var(--line);border-radius:999px;font-size:14px;color:var(--ink);background:rgba(255,255,255,.04);max-width:100%}
+.pal:has(img),.pal:has(.ph){padding-left:5px}
+.pal img,.pal .ph{width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none;background:#2a3170}
+.pal .ph{display:grid;place-items:center;font-size:16px;color:var(--muted)}
+.pal .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:10em}
+.pal:hover{background:rgba(255,255,255,.08)}
+.pal[aria-checked=true]{border-color:var(--gold);background:rgba(255,182,39,.16)}
+.pal:focus-visible{outline:2px solid var(--gold)}
+.hint{margin:0;font-size:13px;color:var(--muted)}
+.hint[hidden],#to[hidden]{display:none}
+.gate{position:fixed;inset:0;z-index:10;display:grid;place-items:center;background:rgba(5,8,30,.5);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);padding:16px}
+.gate[hidden]{display:none}
+.gcard{width:min(360px,100%);background:#0f1640;border:1px solid var(--line);border-radius:20px;padding:26px 22px 22px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.gcard .glead{margin:0;color:var(--muted);font-size:14px}
+.gcard h2{font:700 clamp(32px,9.5vw,42px)/1.1 Charm,Anuphan,serif;white-space:nowrap;color:#fff2cf;margin:6px 0 10px}
+.gcard #gmsg{color:var(--muted);margin:0 0 18px}
+.gcard .go{width:100%}
+.gcard .go[hidden]{display:none}
 .status{margin:6px 0 0;font-size:13px;line-height:1.5;color:var(--muted)}
 .card{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(380px,calc(100% - 32px));max-height:calc(100% - 32px);overflow:auto;background:#0f1640;border:1px solid var(--line);border-radius:18px;padding:22px 22px 18px;z-index:5;box-shadow:0 24px 60px rgba(0,0,0,.55)}
 .card[hidden]{display:none}
@@ -95,8 +117,10 @@ input:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:1px}
     <div class="styles" id="styles" aria-label="แบบกระทง"></div>
     <label for="name">ชื่อคนลอย</label>
     <input id="name" maxlength="24" placeholder="เช่น ต้น">
-    <label for="to">ลอยคู่กับ <small>ไม่ใส่ก็ได้</small></label>
-    <input id="to" maxlength="24" placeholder="เช่น แฟนที่รัก">
+    <span class="lbl2" id="palLbl">ลอยคู่กับ</span>
+    <div class="pals" id="pals" role="radiogroup" aria-labelledby="palLbl"></div>
+    <input id="to" maxlength="24" placeholder="พิมพ์ชื่อคู่ของคุณ" aria-label="ชื่อคู่ของคุณ" hidden>
+    <p class="hint" id="palHint">ให้แฟนเปิดลิงก์แล้วล็อกอิน LINE รูปกับชื่อจะขึ้นให้เลือกตรงนี้</p>
     <label for="wish">คำอธิษฐาน</label>
     <textarea id="wish" maxlength="120" rows="3" placeholder="ขอให้เราได้ลอยกระทงด้วยกันทุกปี"></textarea>
     <div class="cnt" id="cnt">0/120</div>
@@ -106,13 +130,21 @@ input:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:1px}
 </section>
 
 <div class="card" id="card" role="dialog" aria-modal="false" aria-labelledby="cWho" hidden>
-  <img class="av" id="cAv" alt="" referrerpolicy="no-referrer" hidden>
+  <div class="avs"><img id="cAv" alt="" referrerpolicy="no-referrer" hidden><img id="cAv2" alt="" referrerpolicy="no-referrer" hidden></div>
   <p class="lbl">กระทงของ</p>
   <p class="who" id="cWho"></p>
   <p class="pair" id="cPair"></p>
   <blockquote id="cWish"></blockquote>
   <p class="when" id="cWhen"></p>
   <div class="row"><button class="btn pri" id="cClose" type="button">ปิด</button><button class="btn" id="cDel" type="button">ลบกระทงนี้</button></div>
+</div>
+<div class="gate" id="gate">
+  <div class="gcard">
+    <p class="glead">คืนวันเพ็ญเดือนสิบสอง · 24 พ.ย. 2569</p>
+    <h2>ลอยกระทงของเรา</h2>
+    <p id="gmsg">กำลังเข้าสู่ระบบ LINE…</p>
+    <button class="go line" id="gbtn" type="button" hidden>เข้าสู่ระบบด้วย LINE</button>
+  </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -224,6 +256,11 @@ function kx(age,d,start){const v=(calm?.006:.011)*(.55+.45*d);const p=(start+age
 let hits=[];
 const IMG={};
 function face(u){if(!u)return null;let i=IMG[u];if(!i){i=new Image();i.referrerPolicy='no-referrer';i.src=u;IMG[u]=i}return i.complete&&i.naturalWidth?i:null}
+function drawHeart(x,y,h){
+  c.save();c.fillStyle='#ff5f86';c.strokeStyle='#ffe7b0';c.lineWidth=1.5;c.beginPath();
+  c.moveTo(x,y+h*.9);c.bezierCurveTo(x-h*1.7,y-h*.2,x-h*.6,y-h*1.4,x,y-h*.35);c.bezierCurveTo(x+h*.6,y-h*1.4,x+h*1.7,y-h*.2,x,y+h*.9);
+  c.fill();c.stroke();c.restore();
+}
 function drawFace(im,x,y,r){
   c.save();c.fillStyle='rgba(255,200,110,.25)';c.beginPath();c.arc(x,y,r+7,0,TAU);c.fill();
   c.fillStyle='#ffe7b0';c.beginPath();c.arc(x,y,r+2.2,0,TAU);c.fill();
@@ -303,7 +340,11 @@ function frame(ms){
     }
     drawK(c,it.x,y,s,it.st,t,it.sd,true);
     let hy2=y-10*s,hr=Math.max(26,30*s);
-    if(it.k&&it.k.pic){const im=face(it.k.pic);if(im){const r=Math.max(10,12*s),ay=y-37*s-r;drawFace(im,it.x,ay,r);hy2=(hy2+ay)/2;hr+=r}}
+    if(it.k&&(it.k.pic||it.k.toPic)){
+      const a=face(it.k.pic),b=face(it.k.toPic),r=Math.max(10,12*s),ay=y-37*s-r;
+      if(a&&b){drawFace(a,it.x-r*.85,ay,r);drawFace(b,it.x+r*.85,ay,r);drawHeart(it.x,ay-r*1.05,Math.max(4,r*.42));hy2=(hy2+ay)/2;hr+=r*1.6}
+      else if(a||b){drawFace(a||b,it.x,ay,r);hy2=(hy2+ay)/2;hr+=r}
+    }
     c.globalAlpha=1;
     if(it.k)nh.push({k:it.k,x:it.x,y:hy2,r:hr});
   }
@@ -319,12 +360,36 @@ const goodPic=u=>typeof u==='string'&&u.length<=300&&/^https:\/\/[\w.-]+\.line-s
 function norm(id,o,src){
   const S=v=>String(v==null?'':v);
   return {id,src,name:S(o.name).slice(0,24),to:S(o.to).slice(0,24),wish:S(o.wish).slice(0,120),style:Math.max(0,Math.min(3,Number(o.style)|0)),
-    t:Math.min(Number(o.t)||Date.now(),Date.now()+5000),uid:S(o.uid),pic:goodPic(o.pic),d:.42+hash(id)*.55,sd:hash(id+'~')};
+    t:Math.min(Number(o.t)||Date.now(),Date.now()+5000),pid:S(o.pid),toPid:S(o.toPid),toPic:goodPic(o.toPic),pic:goodPic(o.pic),d:.42+hash(id)*.55,sd:hash(id+'~')};
 }
 let local=[];
 try{local=(JSON.parse(localStorage.getItem(LK)||'[]')||[]).map(o=>norm(String(o.id),o,'local'))}catch(_){local=[]}
-function saveLocal(){try{localStorage.setItem(LK,JSON.stringify(local.map(({id,name,to,wish,style,t,pic})=>({id,name,to,wish,style,t,pic}))))}catch(_){}}
-let prof=null,liffOk=false,shared=[],online=false,openSrv=true,lastOk=0;
+function saveLocal(){try{localStorage.setItem(LK,JSON.stringify(local.map(({id,name,to,wish,style,t,pic,toPic})=>({id,name,to,wish,style,t,pic,toPic}))))}catch(_){}}
+let prof=null,liffOk=false,shared=[],online=false,openSrv=true,lastOk=0,people=[],myPid='',toSel='',palKey='';
+function isMe(p){return (myPid&&p.pid===myPid)||(!!prof&&p.name===String(prof.displayName||'')&&p.pic===goodPic(prof.pictureUrl))}
+function renderPals(){
+  const others=people.filter(p=>!isMe(p)).sort((a,b)=>b.seen-a.seen).slice(0,12);
+  if(toSel&&toSel!=='text'&&!others.some(p=>p.pid===toSel))toSel='';
+  const key=JSON.stringify([others.map(p=>[p.pid,p.name,p.pic]),toSel]);
+  if(key===palKey)return;palKey=key;
+  const box=$('pals');box.textContent='';
+  const mk=(val,label,pic,ph)=>{
+    const b=document.createElement('button');b.type='button';b.className='pal';b.setAttribute('role','radio');b.setAttribute('aria-checked',String(toSel===val));
+    if(pic){const im=document.createElement('img');im.alt='';im.referrerPolicy='no-referrer';im.src=pic;b.appendChild(im)}
+    else if(ph){const sp=document.createElement('span');sp.className='ph';sp.textContent=ph;b.appendChild(sp)}
+    const n=document.createElement('span');n.className='n';n.textContent=label;b.appendChild(n);
+    b.addEventListener('click',()=>{toSel=val;palKey='';renderPals();$('to').hidden=toSel!=='text';if(toSel==='text')$('to').focus()});
+    box.appendChild(b);
+  };
+  mk('','ลอยคนเดียว');
+  others.forEach(p=>mk(p.pid,p.name||'ไม่ระบุชื่อ',p.pic,(p.name||'?').slice(0,1)));
+  mk('text','พิมพ์ชื่อเอง',null,'+');
+  $('palHint').hidden=others.length>0;
+}
+async function hello(){
+  if(!prof||!configured)return;
+  try{const j=await post({action:'hello',line:String(prof.userId||''),name:String(prof.displayName||'').slice(0,40),pic:goodPic(prof.pictureUrl)});if(j&&j.ok)myPid=String(j.pid||'')}catch(e){console.warn(e)}
+}
 let myKeys={};try{myKeys=JSON.parse(localStorage.getItem(KK)||'{}')||{}}catch(_){myKeys={}}
 function saveKeys(){try{localStorage.setItem(KK,JSON.stringify(myKeys))}catch(_){}}
 function newKey(){const a=new Uint8Array(16);crypto.getRandomValues(a);return Array.from(a,b=>b.toString(16).padStart(2,'0')).join('')}
@@ -335,14 +400,17 @@ async function pull(){
     if(!j||!j.ok)throw new Error('bad');
     openSrv=!!j.open;online=true;lastOk=Date.now();
     shared=(j.items||[]).map(o=>norm(String(o.id),o,'db'));
+    people=(j.people||[]).map(p=>({pid:String(p.pid),name:String(p.name||'').slice(0,40),pic:goodPic(p.pic),seen:Number(p.seen)||0}));renderPals();
     setStatus(isOpen()&&openSrv?'live':'closed');updateCount();refreshGo();
   }catch(e){console.warn(e);if(!lastOk)setStatus('err');else if(Date.now()-lastOk>30000)setStatus('slow')}
 }
 const all=()=>shared.concat(local);
 function renderFaces(){
   const seen=new Set(),box=$('faces');box.textContent='';
-  for(const k of all()){const key=k.uid||k.pic;if(!k.pic||seen.has(key))continue;seen.add(key);
-    const im=document.createElement('img');im.referrerPolicy='no-referrer';im.alt='';im.src=k.pic;im.title=k.name;box.appendChild(im);if(seen.size>=6)break}
+  for(const k of all())for(const [key,pic,nm] of [[k.pid||k.pic,k.pic,k.name],[k.toPid||k.toPic,k.toPic,k.to]]){
+    if(!pic||seen.has(key)||seen.size>=6)continue;seen.add(key);
+    const im=document.createElement('img');im.referrerPolicy='no-referrer';im.alt='';im.src=pic;im.title=nm;box.appendChild(im);
+  }
 }
 function updateCount(){renderFaces();const n=all().length;$('count').textContent=n?'บนสายน้ำมีกระทงของเรา '+n+' ใบ':'ยังไม่มีใครลอย มาเป็นคนแรกกัน'}
 const ST={
@@ -355,9 +423,8 @@ const ST={
 };
 function setStatus(k){$('status').textContent=ST[k]||'';$('dot').className=k==='live'?'live':''}
 function refreshGo(){
-  const go=$('go'),needLogin=liffOk&&!prof;
-  go.classList.toggle('line',needLogin&&isOpen());
-  go.textContent=!isOpen()?'ปิดรับกระทงแล้ว':needLogin?'เข้าสู่ระบบด้วย LINE เพื่อลอย':'ลอยกระทง';
+  const go=$('go');
+  go.textContent=!isOpen()?'ปิดรับกระทงแล้ว':'ลอยกระทง';
   go.disabled=!isOpen();
 }
 function showMe(){
@@ -387,24 +454,26 @@ $('wish').addEventListener('input',()=>{$('cnt').textContent=$('wish').value.len
 $('form').addEventListener('submit',async e=>{
   e.preventDefault();
   if(!isOpen()){toast('ปิดรับกระทงแล้ว');refreshGo();return}
-  if(liffOk&&!prof){try{window.liff.login({redirectUri:location.href})}catch(_){toast('เข้าสู่ระบบ LINE ไม่สำเร็จ')}return}
-  const name=$('name').value.trim(),to=$('to').value.trim(),wish=$('wish').value.trim();
+  if(CONFIG.liffId&&!prof){$('gate').hidden=false;return}
+  const name=$('name').value.trim(),wish=$('wish').value.trim();
   if(!name){$('name').focus();toast('ใส่ชื่อคนลอยก่อนนะ');return}
+  const pal=toSel&&toSel!=='text'?people.find(p=>p.pid===toSel):null;
+  const to=pal?pal.name:toSel==='text'?$('to').value.trim():'';
   try{localStorage.setItem(NK,name)}catch(_){}
   const go=$('go');go.disabled=true;go.textContent='กำลังลอย…';
-  const pic=goodPic(prof&&prof.pictureUrl);
+  const pic=goodPic(prof&&prof.pictureUrl),toPic=pal?pal.pic:'';
   let ok=false;
   if(configured){
     try{
       const key=newKey();
-      const j=await post({action:'add',name,to,wish,style,pic,line:String(prof&&prof.userId||'').slice(0,64),key});
-      if(j&&j.ok){ok=true;myKeys[j.id]=key;saveKeys();shared.unshift(norm(String(j.id),{name,to,wish,style,t:j.t,pic},'db'))}
+      const j=await post({action:'add',name,to,toPid:pal?pal.pid:'',wish,style,pic,line:String(prof&&prof.userId||'').slice(0,64),key});
+      if(j&&j.ok){ok=true;myKeys[j.id]=key;saveKeys();shared.unshift(norm(String(j.id),{name,to:j.to||to,wish,style,t:j.t,pic,pid:j.pid,toPid:j.toPid,toPic:j.toPic||toPic},'db'))}
       else if(j&&j.error==='closed'){openSrv=false;refreshGo();toast('ปิดรับกระทงแล้ว');go.disabled=false;return}
     }catch(err){console.warn(err)}
   }
-  if(!ok){const id='L'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);local.push(norm(id,{name,to,wish,style,t:Date.now(),pic},'local'));saveLocal()}
+  if(!ok){const id='L'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);local.push(norm(id,{name,to,wish,style,t:Date.now(),pic,toPic},'local'));saveLocal()}
   go.disabled=false;refreshGo();$('wish').value='';$('cnt').textContent='0/120';
-  toast(ok?'ลอยแล้ว แฟนจะเห็นกระทงนี้บนสายน้ำเดียวกัน':'ลอยแล้ว (เห็นเฉพาะในเครื่องนี้)');
+  toast(ok?(to?'ลอยคู่กับ '+to+' แล้ว':'ลอยแล้ว แฟนจะเห็นกระทงนี้บนสายน้ำเดียวกัน'):'ลอยแล้ว (เห็นเฉพาะในเครื่องนี้)');
   if(small())setOpen(false);
   updateCount();
 });
@@ -419,6 +488,7 @@ function openCard(k){
   $('cWish').textContent=k.wish||'ไม่ได้เขียนคำอธิษฐาน แต่ตั้งใจลอยด้วยใจ';
   $('cWhen').textContent='ลอยเมื่อ '+fmt(k.t)+(k.src==='local'?' · เห็นเฉพาะในเครื่องนี้':'');
   if(k.pic){$('cAv').src=k.pic;$('cAv').hidden=false}else $('cAv').hidden=true;
+  if(k.toPic){$('cAv2').src=k.toPic;$('cAv2').hidden=false}else $('cAv2').hidden=true;
   $('cDel').hidden=!canDel(k);$('card').hidden=false;$('cClose').focus();
 }
 function closeCard(){$('card').hidden=true;cur=null}
@@ -437,20 +507,31 @@ function pick(e){
 cv.addEventListener('pointerdown',e=>{if(!$('card').hidden){closeCard();return}const h=pick(e);if(h)openCard(h.k)});
 cv.addEventListener('pointermove',e=>{if(e.pointerType==='mouse')cv.style.cursor=pick(e)?'pointer':'default'});
 
-/* shared river: LINE (LIFF) + Google Sheet */
-updateCount();refreshGo();
+/* login gate + shared river (LINE + Google Sheet) */
+updateCount();refreshGo();renderPals();
 requestAnimationFrame(frame);
 setInterval(refreshGo,30000);
+const cleanUrl=location.origin+location.pathname;
+$('gbtn').addEventListener('click',()=>{try{window.liff.login({redirectUri:cleanUrl})}catch(_){$('gmsg').textContent='เข้าสู่ระบบไม่สำเร็จ ลองเปิดลิงก์ผ่านแอป LINE'}});
 (async()=>{
-  if(CONFIG.liffId&&window.liff){
+  const gmsg=$('gmsg'),gbtn=$('gbtn');
+  if(!CONFIG.liffId){$('gate').hidden=true}
+  else if(!window.liff){gmsg.textContent='โหลดระบบ LINE ไม่ได้ ลองรีเฟรชหน้านี้อีกครั้ง'}
+  else{
     try{
       await window.liff.init({liffId:CONFIG.liffId});liffOk=true;
-      if(window.liff.isLoggedIn()){prof=await window.liff.getProfile();showMe()}
-    }catch(e){console.warn('LIFF',e)}
+      if(window.liff.isLoggedIn()){
+        prof=await window.liff.getProfile();showMe();$('gate').hidden=true;
+        if(location.search)try{history.replaceState(null,'',cleanUrl)}catch(_){}
+      }else if(window.liff.isInClient()){window.liff.login()}
+      else{gmsg.textContent='เข้าสู่ระบบด้วย LINE ก่อน แล้วไปลอยกระทงด้วยกันนะ';gbtn.hidden=false}
+    }catch(e){console.warn('LIFF',e);gmsg.textContent='เข้าสู่ระบบ LINE ไม่ได้ ลองเปิดลิงก์ผ่านแอป LINE อีกครั้ง';gbtn.hidden=false}
   }
   refreshGo();
   if(!configured){setStatus('setup');return}
+  if(CONFIG.liffId&&!prof)return;
   setStatus('wait');
+  await hello();
   await pull();
   const loop=()=>setTimeout(async()=>{if(!document.hidden)await pull();loop()},5000);
   loop();
